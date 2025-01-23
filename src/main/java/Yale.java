@@ -43,7 +43,40 @@ public class Yale {
             this.done = done;
         }
         public String toString() {
-            return "[" + (done ? "X" : " ") + "] " + name;
+            return "[%s] %s".formatted(done ? "X" : " ", name);
+        }
+    }
+
+    private static class ToDo extends Task {
+        public ToDo(String name) {
+            super(name);
+        }
+        public String toString() {
+            return "[T]%s".formatted(super.toString());
+        }
+    }
+
+    private static class Deadline extends Task {
+        private final String deadline;
+        public Deadline(String name, String deadline) {
+            super(name);
+            this.deadline = deadline;
+        }
+        public String toString() {
+            return "[D]%s (by: %s)".formatted(super.toString(), deadline);
+        }
+    }
+
+    private static class Event extends Task {
+        private final String start;
+        private final String end;
+        public Event(String name, String start, String end) {
+            super(name);
+            this.start = start;
+            this.end = end;
+        }
+        public String toString() {
+            return "[E]%s (from: %s, to: %s)".formatted(super.toString(), start, end);
         }
     }
 
