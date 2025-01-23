@@ -6,8 +6,12 @@ import java.util.regex.Pattern;
 public class Yale {
     private static final String NAME = "Yale";
     private static final String LINE = "\t____________________________________________________________";
+
     private static final Pattern MARK_REGEX = Pattern.compile("mark (\\d+)");
     private static final Pattern UNMARK_REGEX = Pattern.compile("unmark (\\d+)");
+    private static final Pattern TODO_REGEX = Pattern.compile("todo (.+)");
+    private static final Pattern DEADLINE_REGEX = Pattern.compile("deadline (.+) /by (.+)");
+    private static final Pattern EVENT_REGEX = Pattern.compile("event (.+) /from (.+) /to (.+)");
 
     private static final ArrayList<Task> list = new ArrayList<>();
 
@@ -26,14 +30,18 @@ public class Yale {
                 markDone(Integer.parseInt(m.group(1)), true);
             } else if ((m = UNMARK_REGEX.matcher(msg)).matches()) {
                 markDone(Integer.parseInt(m.group(1)), false);
-            } else {
-                addToList(msg);
+            } else if ((m = TODO_REGEX.matcher(msg)).matches()) {
+                addToList(new ToDo(m.group(1)));
+            } else if ((m = DEADLINE_REGEX.matcher(msg)).matches()) {
+                addToList(new Deadline(m.group(1), m.group(2)));
+            } else if ((m = EVENT_REGEX.matcher(msg)).matches()) {
+                addToList(new Event(m.group(1), m.group(2), m.group(3)));
             }
         }
         goodbye();
     }
 
-    private static class Task {
+    private static abstract class Task {
         private final String name;
         private boolean done = false;
         public Task(String name) {
@@ -102,11 +110,16 @@ public class Yale {
         System.out.println(LINE);
     }
 
-    private static void addToList(String msg) {
-        Task task = new Task(msg);
+    private static void addToList(Task task) {
         list.add(task);
         System.out.println(LINE);
-        System.out.printf("\tadded: %s\n", msg);
+        System.out.println("\tGot it. I've added this task:");
+        System.out.printf("\t  %s\n", task);
+        if (list.size() == 1) {
+            System.out.println("\tNow you have 1 task in the list.");
+        } else {
+            System.out.printf("\tNow you have %d tasks in the list.\n", list.size());
+        }
         System.out.println(LINE);
     }
 
