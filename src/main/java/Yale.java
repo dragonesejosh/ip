@@ -1,25 +1,40 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Yale {
     private static final String NAME = "Yale";
     private static final String LINE = "\t____________________________________________________________";
 
+    private static final ArrayList<String> list = new ArrayList<>();
+
     public static void main(String[] args) {
         greet();
         Scanner in = new Scanner(System.in);
         while (true) {
             String msg = in.nextLine();
-            if (msg.equalsIgnoreCase("bye")) {
+            if (msg.equals("bye")) {
                 break;
+            } else if (msg.equals("list")) {
+                listOut();
+            } else {
+                addToList(msg);
             }
-            echo(msg);
         }
         goodbye();
     }
 
-    private static void echo(String msg) {
+    private static void listOut() {
         System.out.println(LINE);
-        System.out.println("\t" + msg);
+        for (int i = 0; i < list.size(); i++) {
+            System.out.printf("\t%d. %s\n", i+1, list.get(i));
+        }
+        System.out.println(LINE);
+    }
+
+    private static void addToList(String msg) {
+        list.add(msg);
+        System.out.println(LINE);
+        System.out.printf("\tadded: %s\n", msg);
         System.out.println(LINE);
     }
 
