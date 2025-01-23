@@ -13,6 +13,14 @@ public class Yale {
     private static final Pattern DEADLINE_REGEX = Pattern.compile("deadline (.+) /by (.+)");
     private static final Pattern EVENT_REGEX = Pattern.compile("event (.+) /from (.+) /to (.+)");
 
+    private static final String[][] COMMANDS = {
+            {"mark", "mark [id]"},
+            {"unmark", "unmark [id]"},
+            {"todo", "todo [name]"},
+            {"deadline", "deadline [name] /by [date]"},
+            {"event", "event [name] /from [start] /to [end]"},
+    };
+
     private static final ArrayList<Task> list = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -36,9 +44,24 @@ public class Yale {
                 addToList(new Deadline(m.group(1), m.group(2)));
             } else if ((m = EVENT_REGEX.matcher(msg)).matches()) {
                 addToList(new Event(m.group(1), m.group(2), m.group(3)));
+            } else {
+                tryFindCommand(msg);
             }
         }
         goodbye();
+    }
+
+    private static void tryFindCommand(String msg) {
+        System.out.println(LINE);
+        for (String[] command : COMMANDS) {
+            if (msg.startsWith(command[0])) {
+                System.out.printf("The proper format for %s is '%s'.%n", command[0].toUpperCase(), command[1]);
+                System.out.println(LINE);
+                return;
+            }
+        }
+        System.out.println("\tSorry, I don't know what that command means.");
+        System.out.println(LINE);
     }
 
     private static abstract class Task {
@@ -90,13 +113,23 @@ public class Yale {
 
     private static void markDone(int id, boolean done) {
         System.out.println(LINE);
+        if (list.isEmpty()) {
+            System.out.println("You don't have any tasks!");
+            System.out.println(LINE);
+            return;
+        }
+        if (id > list.size() || id <= 0) {
+            System.out.printf("The id should be from 1 to %d.\n", list.size());
+            System.out.println(LINE);
+            return;
+        }
+        Task task = list.get(id-1);
+        task.setDone(done);
         if (done) {
             System.out.println("\tNice! I've marked this task as done:");
         } else {
             System.out.println("\tOK, I've marked this task as not done yet:");
         }
-        Task task = list.get(id-1);
-        task.setDone(done);
         System.out.printf("\t  %s\n", task);
         System.out.println(LINE);
     }
