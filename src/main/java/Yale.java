@@ -1,21 +1,31 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Yale {
     private static final String NAME = "Yale";
     private static final String LINE = "\t____________________________________________________________";
+    private static final Pattern MARK_REGEX = Pattern.compile("mark (\\d+)");
+    private static final Pattern UNMARK_REGEX = Pattern.compile("unmark (\\d+)");
 
     private static final ArrayList<Task> list = new ArrayList<>();
 
     public static void main(String[] args) {
         greet();
         Scanner in = new Scanner(System.in);
+        Matcher m;
         while (true) {
+            System.out.print("> ");
             String msg = in.nextLine();
             if (msg.equals("bye")) {
                 break;
             } else if (msg.equals("list")) {
                 listOut();
+            } else if ((m = MARK_REGEX.matcher(msg)).matches()) {
+                markDone(Integer.parseInt(m.group(1)), true);
+            } else if ((m = UNMARK_REGEX.matcher(msg)).matches()) {
+                markDone(Integer.parseInt(m.group(1)), false);
             } else {
                 addToList(msg);
             }
@@ -35,6 +45,19 @@ public class Yale {
         public String toString() {
             return "[" + (done ? "X" : " ") + "] " + name;
         }
+    }
+
+    private static void markDone(int id, boolean done) {
+        System.out.println(LINE);
+        if (done) {
+            System.out.println("\tNice! I've marked this task as done:");
+        } else {
+            System.out.println("\tOK, I've marked this task as not done yet:");
+        }
+        Task task = list.get(id-1);
+        task.setDone(done);
+        System.out.printf("\t  %s\n", task);
+        System.out.println(LINE);
     }
 
     private static void listOut() {
