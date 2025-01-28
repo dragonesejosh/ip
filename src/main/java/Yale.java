@@ -68,9 +68,7 @@ public class Yale {
                     tasks.add(task);
                 }
             }
-        } catch (Exception e) {
-            System.out.println("ERROR: " + e.getMessage());
-        }
+        } catch (Exception ignored) {}
         return tasks;
     }
 
@@ -80,9 +78,7 @@ public class Yale {
                 out.println(task.toCsv());
             }
             out.flush();
-        } catch (Exception e) {
-            System.out.println("ERROR: " + e.getMessage());
-        }
+        } catch (Exception ignored) {}
     }
 
     private static void deleteTask(int id) {
