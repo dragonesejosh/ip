@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,23 +20,20 @@ public class Yale {
             {"delete", "delete [id]"}
     };
 
-    private final ArrayList<Task> tasks;
-
     private final Ui ui;
     private final Storage storage;
-    private final Parser parser;
     private final TaskList taskList;
+    private final Parser parser;
 
     public static void main(String[] args) {
-        new Yale().run();
+        new Yale(TASKS_FILE).run();
     }
 
-    public Yale() {
+    public Yale(String filename) {
         this.ui = new Ui();
-        this.storage = new Storage(TASKS_FILE);
+        this.storage = new Storage(filename);
+        this.taskList = new TaskList(ui, storage.readTasks());
         this.parser = new Parser();
-        this.taskList = new TaskList();
-        this.tasks = storage.readTasks();
     }
 
     public void run() {
@@ -45,54 +41,31 @@ public class Yale {
         Matcher m;
         while (true) {
             String msg = ui.getUserInput();
+            boolean needWriteTasks = false;
             if (msg.equals("bye")) {
                 break;
             } else if (msg.equals("list")) {
-                listOut();
+                taskList.listOut();
             } else if ((m = MARK_REGEX.matcher(msg)).matches()) {
-                markDone(Integer.parseInt(m.group(1)), true);
+                needWriteTasks = taskList.markDone(Integer.parseInt(m.group(1)), true);
             } else if ((m = UNMARK_REGEX.matcher(msg)).matches()) {
-                markDone(Integer.parseInt(m.group(1)), false);
+                needWriteTasks = taskList.markDone(Integer.parseInt(m.group(1)), false);
             } else if ((m = TODO_REGEX.matcher(msg)).matches()) {
-                addTask(new Task.ToDo(m.group(1)));
+                needWriteTasks = taskList.addTask(new Task.ToDo(m.group(1)));
             } else if ((m = DEADLINE_REGEX.matcher(msg)).matches()) {
-                addTask(new Task.Deadline(m.group(1), m.group(2)));
+                needWriteTasks = taskList.addTask(new Task.Deadline(m.group(1), m.group(2)));
             } else if ((m = EVENT_REGEX.matcher(msg)).matches()) {
-                addTask(new Task.Event(m.group(1), m.group(2), m.group(3)));
+                needWriteTasks = taskList.addTask(new Task.Event(m.group(1), m.group(2), m.group(3)));
             } else if ((m = DELETE_REGEX.matcher(msg)).matches()) {
-                deleteTask(Integer.parseInt(m.group(1)));
+                needWriteTasks = taskList.deleteTask(Integer.parseInt(m.group(1)));
             } else {
                 tryFindCommand(msg);
             }
+            if (needWriteTasks) {
+                storage.writeTasks(taskList.getTasks());
+            }
         }
         ui.goodbye();
-    }
-
-    private void deleteTask(int id) {
-        ui.beginOutput();
-        if (checkInvalidID(id)) {
-            ui.endOutput();
-            return;
-        }
-        Task task = tasks.remove(id-1);
-        storage.writeTasks(tasks);
-        ui.print("Noted. I've removed this task:");
-        ui.print("  %s", task);
-        ui.print("Now you have %d task%s in the list.",
-                tasks.size(), tasks.size() == 1 ? "" : "s");
-        ui.endOutput();
-    }
-
-    private boolean checkInvalidID(int id) {
-        if (tasks.isEmpty()) {
-            ui.printError("You don't have any tasks!");
-            return true;
-        }
-        if (id > tasks.size() || id <= 0) {
-            ui.printError("The id should be from 1 to %d.", tasks.size());
-            return true;
-        }
-        return false;
     }
 
     private void tryFindCommand(String msg) {
@@ -105,44 +78,6 @@ public class Yale {
             }
         }
         ui.printError("Sorry, I don't know what that command means.");
-        ui.endOutput();
-    }
-
-    private void markDone(int id, boolean done) {
-        ui.beginOutput();
-        if (checkInvalidID(id)) {
-            ui.endOutput();
-            return;
-        }
-        Task task = tasks.get(id-1);
-        task.setDone(done);
-        storage.writeTasks(tasks);
-        if (done) {
-            ui.print("Nice! I've marked this task as done:");
-        } else {
-            ui.print("OK, I've marked this task as not done yet:");
-        }
-        ui.print("  %s", task);
-        ui.endOutput();
-    }
-
-    private void listOut() {
-        ui.beginOutput();
-        ui.print("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            ui.print("%d.%s", i+1, tasks.get(i));
-        }
-        ui.endOutput();
-    }
-
-    private void addTask(Task task) {
-        ui.beginOutput();
-        tasks.add(task);
-        storage.writeTasks(tasks);
-        ui.print("Got it. I've added this task:");
-        ui.print("  %s", task);
-        ui.print("Now you have %d task%s in the list.",
-                tasks.size(), tasks.size() == 1 ? "" : "s");
         ui.endOutput();
     }
 }
