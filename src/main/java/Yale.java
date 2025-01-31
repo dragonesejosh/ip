@@ -1,12 +1,4 @@
-import java.io.File;
-import java.io.PrintWriter;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +21,7 @@ public class Yale {
             {"delete", "delete [id]"}
     };
 
-    private final ArrayList<Task> tasks = retrieveTasks();
+    private final ArrayList<Task> tasks;
 
     private final Ui ui;
     private final Storage storage;
@@ -42,9 +34,10 @@ public class Yale {
 
     public Yale() {
         this.ui = new Ui();
-        this.storage = new Storage();
+        this.storage = new Storage(TASKS_FILE);
         this.parser = new Parser();
         this.taskList = new TaskList();
+        this.tasks = storage.readTasks();
     }
 
     public void run() {
@@ -75,28 +68,6 @@ public class Yale {
         ui.goodbye();
     }
 
-    private ArrayList<Task> retrieveTasks() {
-        ArrayList<Task> tasks = new ArrayList<>();
-        try (Scanner in = new Scanner(new File(TASKS_FILE))) {
-            while (in.hasNextLine()) {
-                Task task = Task.fromCsv(in.nextLine());
-                if (task != null) {
-                    tasks.add(task);
-                }
-            }
-        } catch (Exception ignored) {}
-        return tasks;
-    }
-
-    private void writeTasksToFile() {
-        try (PrintWriter out = new PrintWriter(TASKS_FILE)) {
-            for (Task task : tasks) {
-                out.println(task.toCsv());
-            }
-            out.flush();
-        } catch (Exception ignored) {}
-    }
-
     private void deleteTask(int id) {
         ui.beginOutput();
         if (checkInvalidID(id)) {
@@ -104,7 +75,7 @@ public class Yale {
             return;
         }
         Task task = tasks.remove(id-1);
-        writeTasksToFile();
+        storage.writeTasks(tasks);
         ui.print("Noted. I've removed this task:");
         ui.print("  %s", task);
         ui.print("Now you have %d task%s in the list.",
@@ -145,7 +116,7 @@ public class Yale {
         }
         Task task = tasks.get(id-1);
         task.setDone(done);
-        writeTasksToFile();
+        storage.writeTasks(tasks);
         if (done) {
             ui.print("Nice! I've marked this task as done:");
         } else {
@@ -167,7 +138,7 @@ public class Yale {
     private void addTask(Task task) {
         ui.beginOutput();
         tasks.add(task);
-        writeTasksToFile();
+        storage.writeTasks(tasks);
         ui.print("Got it. I've added this task:");
         ui.print("  %s", task);
         ui.print("Now you have %d task%s in the list.",
