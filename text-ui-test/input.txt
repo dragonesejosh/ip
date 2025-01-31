@@ -6,4 +6,7 @@ event project meeting /from Aug 6th 2pm /to 4pm
 list
 delete 2
 list
+deadline finish iP /by 2025-02-24
+event CNY /from 2025-01-29 /to 2025-01-30
+list
 bye

@@ -1,6 +1,10 @@
 import java.io.File;
 import java.io.PrintWriter;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -17,6 +21,8 @@ public class Yale {
     private static final Pattern DEADLINE_REGEX = Pattern.compile("deadline (.+) /by (.+)");
     private static final Pattern EVENT_REGEX = Pattern.compile("event (.+) /from (.+) /to (.+)");
     private static final Pattern DELETE_REGEX = Pattern.compile("delete (\\d+)");
+
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy");
 
     private static final String[][] COMMANDS = {
             {"mark", "mark [id]"},
@@ -124,6 +130,14 @@ public class Yale {
         System.out.println(LINE);
     }
 
+    public static LocalDate tryParseDate(String dateStr) {
+        try {
+            return LocalDate.parse(dateStr);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
     private static abstract class Task {
         protected final String name;
         protected boolean isDone = false;
@@ -164,32 +178,38 @@ public class Yale {
     }
 
     private static class Deadline extends Task {
-        private final String deadline;
+        private final String deadlineStr;
+        private final LocalDate deadlineDate;
         public Deadline(String name, String deadline) {
             super(name);
-            this.deadline = deadline;
+            this.deadlineDate = tryParseDate(deadline);
+            this.deadlineStr = (this.deadlineDate == null) ? deadline : this.deadlineDate.format(DATE_FORMAT);
         }
         public String toString() {
-            return "[D]%s (by: %s)".formatted(super.toString(), deadline);
+            return "[D]%s (by: %s)".formatted(super.toString(), deadlineStr);
         }
         protected String[] getParams() {
-            return new String[] {isDone ? "X" : " ", name, deadline};
+            return new String[] {isDone ? "X" : " ", name, deadlineStr};
         }
     }
 
     private static class Event extends Task {
-        private final String start;
-        private final String end;
+        private final String startStr;
+        private final String endStr;
+        private final LocalDate startDate;
+        private final LocalDate endDate;
         public Event(String name, String start, String end) {
             super(name);
-            this.start = start;
-            this.end = end;
+            this.startDate = tryParseDate(start);
+            this.startStr = (this.startDate == null) ? start : this.startDate.format(DATE_FORMAT);
+            this.endDate = tryParseDate(end);
+            this.endStr = (this.endDate == null) ? end : this.endDate.format(DATE_FORMAT);
         }
         public String toString() {
-            return "[E]%s (from: %s, to: %s)".formatted(super.toString(), start, end);
+            return "[E]%s (from: %s, to: %s)".formatted(super.toString(), startStr, endStr);
         }
         protected String[] getParams() {
-            return new String[]{isDone ? "X" : " ", name, start, end};
+            return new String[]{isDone ? "X" : " ", name, startStr, endStr};
         }
     }
 
