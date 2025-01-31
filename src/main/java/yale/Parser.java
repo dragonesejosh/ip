@@ -1,3 +1,5 @@
+package yale;
+
 public class Parser {
 
     private static final Command[] COMMANDS = {

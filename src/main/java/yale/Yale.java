@@ -1,3 +1,5 @@
+package yale;
+
 public class Yale {
     private static final String TASKS_FILE = "tasks.txt";
 
