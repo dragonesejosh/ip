@@ -10,7 +10,7 @@ public abstract class Task {
     protected final String name;
     protected boolean isDone = false;
 
-    public Task(String name) {
+    private Task(String name) {
         this.name = name;
     }
 
@@ -24,10 +24,19 @@ public abstract class Task {
 
     protected abstract String[] getParams();
 
+    /**
+     * Returns the Task as a row in a CSV file.
+     */
     public String toCsv() {
         return String.join("\0", getParams());
     }
 
+    /**
+     * Creates a Task from a row in a CSV file.
+     *
+     * @param csvString The row from the CSV file.
+     * @return The created Task, or null if tf the format was incorrect.
+     */
     public static Task fromCsv(String csvString) {
         String[] tokens = csvString.split("\0");
         return switch (tokens.length) {
@@ -46,6 +55,9 @@ public abstract class Task {
         }
     }
 
+    /**
+     * A Task which has no due date.
+     */
     public static class ToDo extends Task {
         public ToDo(String name) {
             super(name);
@@ -60,6 +72,9 @@ public abstract class Task {
         }
     }
 
+    /**
+     * A Task which is due at a certain date.
+     */
     public static class Deadline extends Task {
         private final String deadlineStr;
         private final LocalDate deadlineDate;
@@ -79,6 +94,9 @@ public abstract class Task {
         }
     }
 
+    /**
+     * A Task which starts and ends at certain dates.
+     */
     public static class Event extends Task {
         private final String startStr;
         private final String endStr;
