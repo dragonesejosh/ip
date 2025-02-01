@@ -16,7 +16,9 @@ public class Parser {
                     "event (.+) /from (.+) /to (.+)",
                     (t, m) -> t.addTask(new Task.Event(m.group(1), m.group(2), m.group(3)))),
             new Command("delete", "delete [id]", "delete (\\d+)",
-                    (t, m) -> t.deleteTask(Integer.parseInt(m.group(1))))
+                    (t, m) -> t.deleteTask(Integer.parseInt(m.group(1)))),
+            new Command("find", "find [keyword]", "find (.+)",
+                    (t, m) -> t.listSearch(m.group(1)))
     };
 
     private final Ui ui;

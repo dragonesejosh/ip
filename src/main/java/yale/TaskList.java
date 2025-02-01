@@ -22,6 +22,19 @@ public class TaskList {
         return tasks;
     }
 
+    public boolean listSearch(String searchString) {
+        ui.beginOutput();
+        ui.print("Here are the tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (task.getName().contains(searchString)) {
+                ui.print("%d.%s", i+1, task);
+            }
+        }
+        ui.endOutput();
+        return false;
+    }
+
     /**
      * Lists out the tasks in the Ui.
      */
