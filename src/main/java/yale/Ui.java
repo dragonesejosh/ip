@@ -29,7 +29,7 @@ public class Ui {
     }
 
     public void printError(String msg, Object... args) {
-        System.out.printf("\tERROR: " + msg + "\n", args);
+        System.out.printf("\t" + msg + "\n", args);
     }
 
     public void greet() {

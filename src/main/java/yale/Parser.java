@@ -34,7 +34,7 @@ public class Parser {
             return false;
         } else if (msg.equals("list")) {
             taskList.listOut();
-            return false;
+            return true;
         }
         for (Command cmd : COMMANDS) {
             if (cmd.tryCommand(taskList, storage, msg)) {
