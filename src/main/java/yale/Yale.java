@@ -1,5 +1,8 @@
 package yale;
 
+/**
+ * A chatbot which can interact with the user.
+ */
 public class Yale {
     private static final String TASKS_FILE = "tasks.txt";
 
@@ -10,6 +13,11 @@ public class Yale {
         new Yale(TASKS_FILE).run();
     }
 
+    /**
+     * Creates an instance of Yale which can be run.
+     *
+     * @param filename Filename of the task file
+     */
     public Yale(String filename) {
         this.ui = new Ui();
         Storage storage = new Storage(filename);
@@ -17,6 +25,9 @@ public class Yale {
         this.parser = new Parser(ui, storage, taskList);
     }
 
+    /**
+     * Runs the chatbot until it exits.
+     */
     public void run() {
         ui.greet();
         while (true) {

@@ -7,6 +7,12 @@ public class TaskList {
     private final Ui ui;
     private final ArrayList<Task> tasks;
 
+    /**
+     * Creates a TaskList which holds tasks and modifies them.
+     *
+     * @param ui The Ui to display the output.
+     * @param tasks The TaskList containing the tasks.
+     */
     public TaskList(Ui ui, ArrayList<Task> tasks) {
         this.ui = ui;
         this.tasks = tasks;
@@ -16,6 +22,9 @@ public class TaskList {
         return tasks;
     }
 
+    /**
+     * Lists out the tasks in the Ui.
+     */
     public void listOut() {
         ui.beginOutput();
         ui.print("Here are the tasks in your list:");
@@ -25,6 +34,12 @@ public class TaskList {
         ui.endOutput();
     }
 
+    /**
+     * Adds a new task to the tasklist.
+     *
+     * @param task The task to be added.
+     * @return true to signify that the tasks were updated.
+     */
     public boolean addTask(Task task) {
         ui.beginOutput();
         tasks.add(task);
@@ -36,6 +51,13 @@ public class TaskList {
         return true;
     }
 
+    /**
+     * Deletes a task from the tasklist by id.
+     * Fails if the id is out of range.
+     *
+     * @param id The id of the task to be deleted.
+     * @return true if the task was deleted, false otherwise.
+     */
     public boolean deleteTask(int id) {
         ui.beginOutput();
         if (checkInvalidID(id)) {
@@ -63,6 +85,13 @@ public class TaskList {
         return false;
     }
 
+    /**
+     * Marks or unmarks the task by id.
+     *
+     * @param id The id of the task to mark or unmark.
+     * @param done true to mark, false to unmark.
+     * @return true if successful, false otherwise.
+     */
     public boolean markDone(int id, boolean done) {
         ui.beginOutput();
         if (checkInvalidID(id)) {
