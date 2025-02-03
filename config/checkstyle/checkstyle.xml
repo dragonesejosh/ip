@@ -36,6 +36,11 @@
 
     <!-- All Java AST specific tests live under TreeWalker module. -->
     <module name="TreeWalker">
+        <!-- Suppresses indentation check for lambda-style switch statements -->
+        <module name="SuppressionXpathSingleFilter">
+            <property name="checks" value="Indentation"/>
+            <property name="query" value="//SWITCH_RULE/descendant-or-self::node()"/>
+        </module>
 
         <!-- Required to allow exceptions in code style -->
         <module name="SuppressionCommentFilter">
