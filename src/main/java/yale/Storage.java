@@ -43,9 +43,7 @@ public class Storage {
      */
     public void writeTasks(ArrayList<Task> tasks) {
         try (PrintWriter out = new PrintWriter(file)) {
-            for (Task task : tasks) {
-                out.println(task.toCsv());
-            }
+            tasks.stream().map(Task::toCsv).forEach(out::println);
             out.flush();
         } catch (Exception ignored) {}
     }
