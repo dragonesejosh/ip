@@ -43,12 +43,16 @@ public abstract class Task {
      */
     public static Task fromCsv(String csvString) {
         String[] tokens = csvString.split("\0");
-        return switch (tokens.length) {
+        Task task =  switch (tokens.length) {
             case 2 -> new ToDo(tokens[1]);
             case 3 -> new Deadline(tokens[1], tokens[2]);
             case 4 -> new Event(tokens[1], tokens[2], tokens[3]);
             default -> null;
         };
+        if (task != null && tokens[0].equals("X")) {
+            task.setDone(true);
+        }
+        return task;
     }
 
     private static LocalDate tryParseDate(String dateStr) {

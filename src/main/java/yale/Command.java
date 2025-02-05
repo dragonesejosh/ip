@@ -38,11 +38,13 @@ public class Command {
      */
     public boolean tryCommand(TaskList taskList, Storage storage, String msg) {
         Matcher m = regex.matcher(msg);
-        if (m.matches() && command.apply(taskList, m)) {
-            storage.writeTasks(taskList.getTasks());
-            return true;
+        if (!m.matches()) {
+            return false;
         }
-        return false;
+        if (command.apply(taskList, m)) {
+            storage.writeTasks(taskList.getTasks());
+        }
+        return true;
     }
 
     /**
