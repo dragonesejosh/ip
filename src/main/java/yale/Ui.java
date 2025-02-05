@@ -1,39 +1,28 @@
 package yale;
 
-import java.util.Scanner;
-
 public class Ui {
     private static final String NAME = "Yale";
-    private static final String LINE = "\t____________________________________________________________";
-    private final Scanner scanner;
+
+    private StringBuilder output;
 
     /**
      * Creates a Ui to display output.
      */
-    public Ui() {
-        this.scanner = new Scanner(System.in);
-    }
-
-    /**
-     * Asks the user for input and returns the answer.
-     */
-    public String getUserInput() {
-        System.out.print("> ");
-        return scanner.nextLine();
-    }
+    public Ui() {}
 
     /**
      * Begins outputting a response.
      */
-    public void beginOutput() {
-        System.out.println(LINE);
+    public Ui beginOutput() {
+        output = new StringBuilder();
+        return this;
     }
 
     /**
      * Finish outputting a response.
      */
-    public void endOutput() {
-        System.out.println(LINE);
+    public String getOutput() {
+        return output.toString();
     }
 
     /**
@@ -42,8 +31,9 @@ public class Ui {
      * @param msg The formatted message to display.
      * @param args The arguments of the message.
      */
-    public void print(String msg, Object... args) {
-        System.out.printf("\t" + msg + "\n", args);
+    public Ui print(String msg, Object... args) {
+        output.append(msg.formatted(args)).append("\n");
+        return this;
     }
 
     /**
@@ -52,26 +42,22 @@ public class Ui {
      * @param msg The formatted error message to display.
      * @param args The arguments of the error message.
      */
-    public void printError(String msg, Object... args) {
-        System.out.printf("\t" + msg + "\n", args);
+    public Ui printError(String msg, Object... args) {
+        output.append("Error: ").append(msg.formatted(args)).append("\n");
+        return this;
     }
 
     /**
      * Displays a greeting to the user.
      */
-    public void greet() {
-        beginOutput();
-        print("Hello! I'm %s.", NAME);
-        print("What can I do for you?");
-        endOutput();
+    public Ui greet() {
+        return print("Hello! I'm %s.", NAME).print("What can I do for you?");
     }
 
     /**
      * Displays a goodbye message to the user.
      */
-    public void goodbye() {
-        beginOutput();
-        print("Bye. Hope to see you again soon!");
-        endOutput();
+    public Ui goodbye() {
+        return print("Bye. Hope to see you again soon!");
     }
 }

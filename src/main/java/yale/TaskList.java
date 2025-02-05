@@ -23,7 +23,6 @@ public class TaskList {
     }
 
     public boolean listSearch(String searchString) {
-        ui.beginOutput();
         ui.print("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
@@ -31,7 +30,6 @@ public class TaskList {
                 ui.print("%d.%s", i+1, task);
             }
         }
-        ui.endOutput();
         return false;
     }
 
@@ -39,12 +37,10 @@ public class TaskList {
      * Lists out the tasks in the Ui.
      */
     public void listOut() {
-        ui.beginOutput();
         ui.print("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             ui.print("%d.%s", i+1, tasks.get(i));
         }
-        ui.endOutput();
     }
 
     /**
@@ -54,13 +50,11 @@ public class TaskList {
      * @return true to signify that the tasks were updated.
      */
     public boolean addTask(Task task) {
-        ui.beginOutput();
         tasks.add(task);
         ui.print("Got it. I've added this task:");
         ui.print("  %s", task);
         ui.print("Now you have %d task%s in the list.",
                 tasks.size(), tasks.size() == 1 ? "" : "s");
-        ui.endOutput();
         return true;
     }
 
@@ -72,9 +66,7 @@ public class TaskList {
      * @return true if the task was deleted, false otherwise.
      */
     public boolean deleteTask(int id) {
-        ui.beginOutput();
         if (checkInvalidID(id)) {
-            ui.endOutput();
             return false;
         }
         Task task = tasks.remove(id-1);
@@ -82,7 +74,6 @@ public class TaskList {
         ui.print("  %s", task);
         ui.print("Now you have %d task%s in the list.",
                 tasks.size(), tasks.size() == 1 ? "" : "s");
-        ui.endOutput();
         return true;
     }
 
@@ -106,9 +97,7 @@ public class TaskList {
      * @return true if successful, false otherwise.
      */
     public boolean markDone(int id, boolean done) {
-        ui.beginOutput();
         if (checkInvalidID(id)) {
-            ui.endOutput();
             return false;
         }
         Task task = tasks.get(id-1);
@@ -119,7 +108,6 @@ public class TaskList {
             ui.print("OK, I've marked this task as not done yet:");
         }
         ui.print("  %s", task);
-        ui.endOutput();
         return true;
     }
 }

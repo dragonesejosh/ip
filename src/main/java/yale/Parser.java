@@ -44,32 +44,29 @@ public class Parser {
      * @param msg The input string to parse.
      * @return false if the program should halt, true otherwise.
      */
-    public boolean parseMsg(String msg) {
+    public void parseMsg(String msg) {
         if (msg.equals("bye")) {
-            return false;
+            ui.goodbye();
+            return;
         } else if (msg.equals("list")) {
             taskList.listOut();
-            return true;
+            return;
         }
         for (Command cmd : COMMANDS) {
             if (cmd.tryCommand(taskList, storage, msg)) {
                 storage.writeTasks(taskList.getTasks());
-                return true;
+                return;
             }
         }
         tryFindCommand(msg);
-        return true;
     }
 
     private void tryFindCommand(String msg) {
-        ui.beginOutput();
         for (Command cmd : COMMANDS) {
             if (cmd.partialMatch(ui, msg)) {
-                ui.endOutput();
                 return;
             }
         }
         ui.printError("Sorry, I don't know what that command means.");
-        ui.endOutput();
     }
 }

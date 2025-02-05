@@ -9,8 +9,8 @@ public class Yale {
     private final Ui ui;
     private final Parser parser;
 
-    public static void main(String[] args) {
-        new Yale(TASKS_FILE).run();
+    public Yale() {
+        this(TASKS_FILE);
     }
 
     /**
@@ -25,17 +25,13 @@ public class Yale {
         this.parser = new Parser(ui, storage, taskList);
     }
 
-    /**
-     * Runs the chatbot until it exits.
-     */
-    public void run() {
-        ui.greet();
-        while (true) {
-            String msg = ui.getUserInput();
-            if (!parser.parseMsg(msg)) {
-                break;
-            }
-        }
-        ui.goodbye();
+    public String greet() {
+        return ui.beginOutput().greet().getOutput();
+    }
+
+    public String getResponse(String input) {
+        ui.beginOutput();
+        parser.parseMsg(input);
+        return ui.getOutput();
     }
 }

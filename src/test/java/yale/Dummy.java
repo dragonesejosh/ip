@@ -13,7 +13,7 @@ public class Dummy {
         public void beginOutput() {}
 
         @Override
-        public void endOutput() {}
+        public void getOutput() {}
 
         @Override
         public void print(String msg, Object... args) {}
