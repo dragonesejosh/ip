@@ -21,6 +21,11 @@ public class Command {
      */
     public Command(String name, String prettyFormat, String regex,
                    BiFunction<TaskList, Matcher, Boolean> command) {
+        assert name != null && !name.isEmpty();
+        assert prettyFormat != null && !prettyFormat.isEmpty();
+        assert regex != null && !regex.isEmpty();
+        assert command != null;
+
         this.name = name;
         this.prettyFormat = prettyFormat;
         this.regex = Pattern.compile(regex);
@@ -37,6 +42,10 @@ public class Command {
      * @return true if it matches, false otherwise.
      */
     public boolean tryCommand(TaskList taskList, Storage storage, String msg) {
+        assert taskList != null;
+        assert storage != null;
+        assert msg != null;
+
         Matcher m = regex.matcher(msg);
         if (!m.matches()) {
             return false;
@@ -56,6 +65,9 @@ public class Command {
      * @return true if it is a partial match, false otherwise.
      */
     public boolean partialMatch(Ui ui, String msg) {
+        assert ui != null;
+        assert msg != null;
+
         if (msg.startsWith(name)) {
             ui.printError("The proper format for %s is '%s'.",
                     name.toUpperCase(), prettyFormat);

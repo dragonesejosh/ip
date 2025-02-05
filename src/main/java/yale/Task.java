@@ -11,6 +11,7 @@ public abstract class Task {
     protected boolean isDone = false;
 
     private Task(String name) {
+        assert name != null;
         this.name = name;
     }
 
@@ -42,6 +43,7 @@ public abstract class Task {
      * @return The created Task, or null if tf the format was incorrect.
      */
     public static Task fromCsv(String csvString) {
+        assert csvString != null;
         String[] tokens = csvString.split("\0");
         Task task =  switch (tokens.length) {
             case 2 -> new ToDo(tokens[1]);
@@ -56,6 +58,7 @@ public abstract class Task {
     }
 
     private static LocalDate tryParseDate(String dateStr) {
+        assert dateStr != null;
         try {
             return LocalDate.parse(dateStr);
         } catch (DateTimeParseException e) {

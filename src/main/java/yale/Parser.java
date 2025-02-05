@@ -33,6 +33,10 @@ public class Parser {
      * @param taskList The TaskList containing the tasks.
      */
     public Parser(Ui ui, Storage storage, TaskList taskList) {
+        assert ui != null;
+        assert storage != null;
+        assert taskList != null;
+        
         this.ui = ui;
         this.storage = storage;
         this.taskList = taskList;
