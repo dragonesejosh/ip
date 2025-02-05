@@ -54,7 +54,6 @@ public class Parser {
         }
         for (Command cmd : COMMANDS) {
             if (cmd.tryCommand(taskList, storage, msg)) {
-                storage.writeTasks(taskList.getTasks());
                 return;
             }
         }
