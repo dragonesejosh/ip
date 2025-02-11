@@ -26,12 +26,16 @@ public class Yale {
     }
 
     public String greet() {
-        return ui.beginOutput().greet().getOutput();
+        String output = ui.beginOutput().greet().getOutput();
+        assert output != null && !output.isEmpty();
+        return output;
     }
 
     public String getResponse(String input) {
         ui.beginOutput();
         parser.parseMsg(input);
-        return ui.getOutput();
+        String output = ui.getOutput();
+        assert output != null && !output.isEmpty();
+        return output;
     }
 }

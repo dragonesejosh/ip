@@ -15,6 +15,7 @@ public class Storage {
      * @param filename Filename of the task file.
      */
     public Storage(String filename) {
+        assert filename != null && !filename.isEmpty();
         this.file = new File(filename);
     }
 
