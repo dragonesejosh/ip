@@ -20,7 +20,7 @@ public class Yale {
      */
     public Yale(String filename) {
         this.ui = new Ui();
-        Storage storage = new Storage(filename);
+        Storage storage = new Storage(ui, filename);
         TaskList taskList = new TaskList(ui, storage.readTasks());
         this.parser = new Parser(ui, storage, taskList);
     }
