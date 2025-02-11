@@ -1,12 +1,14 @@
 package yale;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Storage {
 
+    private final Ui ui;
     private final File file;
 
     /**
@@ -14,7 +16,8 @@ public class Storage {
      *
      * @param filename Filename of the task file.
      */
-    public Storage(String filename) {
+    public Storage(Ui ui, String filename) {
+        this.ui = ui;
         this.file = new File(filename);
     }
 
@@ -32,7 +35,9 @@ public class Storage {
                     tasks.add(task);
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (FileNotFoundException e) {
+            return new ArrayList<>();
+        }
         return tasks;
     }
 
@@ -47,6 +52,8 @@ public class Storage {
                 out.println(task.toCsv());
             }
             out.flush();
-        } catch (Exception ignored) {}
+        } catch (FileNotFoundException e) {
+            ui.printError("Cannot write tasks to file: %s", e.getMessage());
+        }
     }
 }
