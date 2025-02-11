@@ -25,7 +25,6 @@ public class Main extends Application {
             stage.setTitle("Yale ChatBot");
             stage.setMinHeight(220);
             stage.setMinWidth(400);
-            stage.setMaxWidth(400);
             fxmlLoader.<MainWindow>getController().setYale(yale);  // inject the Duke instance
             stage.show();
         } catch (IOException e) {
