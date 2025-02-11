@@ -8,6 +8,7 @@ public class Command {
     private final String prettyFormat;
     private final Pattern regex;
     private final TriFunction command;
+    private final String helpDetails;
 
     @FunctionalInterface
     public interface TriFunction {
@@ -24,23 +25,26 @@ public class Command {
      * @param command The function to run if matched, which returns true if updating tasks.
      */
     public Command(String name, String params, String regex,
-                   TriFunction command) {
+                   TriFunction command, String helpDetails) {
         assert name != null && !name.isEmpty();
         assert params != null && !params.isEmpty();
         assert regex != null && !regex.isEmpty();
         assert command != null;
+        assert helpDetails != null && !helpDetails.isEmpty();
   
         this.name = name;
         this.prettyFormat = name + " " + params;
         this.regex = Pattern.compile(name + " " + regex);
         this.command = command;
+        this.helpDetails = helpDetails;
     }
 
-    public Command(String name, TriFunction command) {
+    public Command(String name, TriFunction command, String helpDetails) {
         this.name = name;
         this.prettyFormat = name;
         this.regex = Pattern.compile(name);
         this.command = command;
+        this.helpDetails = helpDetails;
     }
 
     /**
@@ -74,5 +78,9 @@ public class Command {
             storage.writeTasks(taskList.getTasks());
         }
         return true;
+    }
+
+    public String toString() {
+        return "COMMAND: %s\n%s".formatted(prettyFormat, helpDetails);
     }
 }

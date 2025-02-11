@@ -1,30 +1,43 @@
 package yale;
 
+import java.util.Arrays;
+
 public class Parser {
 
     private static final Command[] COMMANDS = {
             new Command("bye", (ui, t, m) -> {
                 ui.goodbye();
                 return false;
-            }),
+            }, "Exits the application."),
             new Command("list", (ui, t, m) -> {
                 t.listOut();
                 return false;
-            }),
+            }, "Lists out all the tasks in order."),
             new Command("mark", "[id]", "(\\d+)",
-                    (ui, t, m) -> t.markDone(Integer.parseInt(m.group(1)), true)),
+                    (ui, t, m) -> t.markDone(Integer.parseInt(m.group(1)), true),
+                    "Marks the task at index [id] as completed."),
             new Command("unmark", "[id]", "(\\d+)",
-                    (ui, t, m) -> t.markDone(Integer.parseInt(m.group(1)), false)),
+                    (ui, t, m) -> t.markDone(Integer.parseInt(m.group(1)), false),
+                    "Marks the task at index [id] as incomplete."),
             new Command("todo", "[name]", "(.+)",
-                    (ui, t, m) -> t.addTask(new Task.ToDo(m.group(1)))),
+                    (ui, t, m) -> t.addTask(new Task.ToDo(m.group(1))),
+                    "Adds a new task with no due date to the task list."),
             new Command("deadline", "[name] /by [date]", "(.+) /by (.+)",
-                    (ui, t, m) -> t.addTask(new Task.Deadline(m.group(1), m.group(2)))),
+                    (ui, t, m) -> t.addTask(new Task.Deadline(m.group(1), m.group(2))),
+                    "Adds a new task with a due date to the task list."),
             new Command("event", "[name] /from [start] /to [end]", "(.+) /from (.+) /to (.+)",
-                    (ui, t, m) -> t.addTask(new Task.Event(m.group(1), m.group(2), m.group(3)))),
+                    (ui, t, m) -> t.addTask(new Task.Event(m.group(1), m.group(2), m.group(3))),
+                    "Adds a new task with a start and end date to the task list."),
             new Command("delete", "[id]", "(\\d+)",
-                    (ui, t, m) -> t.deleteTask(Integer.parseInt(m.group(1)))),
+                    (ui, t, m) -> t.deleteTask(Integer.parseInt(m.group(1))),
+                    "Deletes the task at index [id]."),
             new Command("find", "[keyword]", "(.+)",
-                    (ui, t, m) -> t.listSearch(m.group(1)))
+                    (ui, t, m) -> t.listSearch(m.group(1)),
+                    "Lists out all the tasks that contain the keywords."),
+            new Command("help", (ui, t, m) -> {
+                printHelp(ui);
+                return false;
+            }, "Lists out all the commands and their details.")
     };
 
     private final Ui ui;
@@ -60,5 +73,9 @@ public class Parser {
             }
         }
         ui.printError("Sorry, I don't know what that command means.");
+    }
+
+    private static void printHelp(Ui ui) {
+        Arrays.stream(COMMANDS).forEach((cmd) -> ui.print("%s\n", cmd));
     }
 }
