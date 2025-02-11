@@ -14,6 +14,9 @@ public class TaskList {
      * @param tasks The TaskList containing the tasks.
      */
     public TaskList(Ui ui, ArrayList<Task> tasks) {
+        assert ui != null;
+        assert tasks != null;
+        
         this.ui = ui;
         this.tasks = tasks;
     }
@@ -102,6 +105,7 @@ public class TaskList {
         }
         Task task = tasks.get(id-1);
         task.setDone(done);
+        assert task.isDone == done;
         if (done) {
             ui.print("Nice! I've marked this task as done:");
         } else {

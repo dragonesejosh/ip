@@ -17,6 +17,7 @@ public class Storage {
      * @param filename Filename of the task file.
      */
     public Storage(Ui ui, String filename) {
+        assert filename != null && !filename.isEmpty();
         this.ui = ui;
         this.file = new File(filename);
     }
@@ -48,9 +49,7 @@ public class Storage {
      */
     public void writeTasks(ArrayList<Task> tasks) {
         try (PrintWriter out = new PrintWriter(file)) {
-            for (Task task : tasks) {
-                out.println(task.toCsv());
-            }
+            tasks.stream().map(Task::toCsv).forEach(out::println);
             out.flush();
         } catch (FileNotFoundException e) {
             ui.printError("Cannot write tasks to file: %s", e.getMessage());

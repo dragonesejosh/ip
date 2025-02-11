@@ -25,6 +25,11 @@ public class Command {
      */
     public Command(String name, String params, String regex,
                    TriFunction command) {
+        assert name != null && !name.isEmpty();
+        assert params != null && !params.isEmpty();
+        assert regex != null && !regex.isEmpty();
+        assert command != null;
+  
         this.name = name;
         this.prettyFormat = name + " " + params;
         this.regex = Pattern.compile(name + " " + regex);
@@ -49,6 +54,11 @@ public class Command {
      * @return true if it matches, false otherwise.
      */
     public boolean tryCommand(Ui ui, TaskList taskList, Storage storage, String msg) {
+        assert ui != null;
+        assert taskList != null;
+        assert storage != null;
+        assert msg != null;
+
         if (!msg.startsWith(name)) {
             return false;
         }
