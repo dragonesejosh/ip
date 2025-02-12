@@ -5,14 +5,10 @@ import java.util.Arrays;
 public class Parser {
 
     private static final Command[] COMMANDS = {
-            new Command("bye", (ui, t, m) -> {
-                ui.goodbye();
-                return false;
-            }, "Exits the application."),
-            new Command("list", (ui, t, m) -> {
-                t.listOut();
-                return false;
-            }, "Lists out all the tasks in order."),
+            new Command("bye", (ui, t, m) -> ui.goodbye(),
+                    "Exits the application."),
+            new Command("list", (ui, t, m) -> t.listOut(),
+                    "Lists out all the tasks in order."),
             new Command("mark", "[id]", "(\\d+)",
                     (ui, t, m) -> t.markDone(Integer.parseInt(m.group(1)), true),
                     "Marks the task at index [id] as completed."),
@@ -34,10 +30,8 @@ public class Parser {
             new Command("find", "[keyword]", "(.+)",
                     (ui, t, m) -> t.listSearch(m.group(1)),
                     "Lists out all the tasks that contain the keywords."),
-            new Command("help", (ui, t, m) -> {
-                printHelp(ui);
-                return false;
-            }, "Lists out all the commands and their details.")
+            new Command("help", (ui, t, m) -> printHelp(ui),
+                    "Lists out all the commands and their details.")
     };
 
     private final Ui ui;

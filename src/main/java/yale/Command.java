@@ -15,6 +15,11 @@ public class Command {
         boolean apply(Ui ui, TaskList taskList, Matcher matcher);
     }
 
+    @FunctionalInterface
+    public interface TriConsumer {
+        void apply(Ui ui, TaskList taskList, Matcher matcher);
+    }
+
     /**
      * Creates a Command which can be matched against inputs and
      * run its function if matched.
@@ -39,11 +44,14 @@ public class Command {
         this.helpDetails = helpDetails;
     }
 
-    public Command(String name, TriFunction command, String helpDetails) {
+    public Command(String name, TriConsumer command, String helpDetails) {
         this.name = name;
         this.prettyFormat = name;
         this.regex = Pattern.compile(name);
-        this.command = command;
+        this.command = (ui, t, m) -> {
+            command.apply(ui, t, m);
+            return false;
+        };
         this.helpDetails = helpDetails;
     }
 
