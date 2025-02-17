@@ -5,20 +5,6 @@
 Yale is a chatbot that can help you manage your tasks.\
 You can add and delete tasks, and track their completion.
 
-# Command summary
-| Action       | Format                                 |
-|--------------|----------------------------------------|
-| Help         | `help`                                 |
-| Exit         | `bye`                                  |
-| List         | `list`                                 |
-| Add todo     | `todo [name]`                          |
-| Add deadline | `deadline [name] /by [date]`           |
-| Add event    | `event [name] /from [start] /to [end]` |
-| Mark         | `mark [id]`                            |
-| Unmark       | `unmark [id]`                          |
-| Delete       | `delete [id]`                          |
-| Find         | `find [keyword]`                       |
-
 ## Viewing help: `help`
 
 Lists out all the commands and their details.
