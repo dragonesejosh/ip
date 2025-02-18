@@ -6,11 +6,6 @@ public class Ui {
     private StringBuilder output;
 
     /**
-     * Creates a Ui to display output.
-     */
-    public Ui() {}
-
-    /**
      * Begins outputting a response.
      */
     public Ui beginOutput() {
